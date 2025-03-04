@@ -3,13 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Reciter;
-use App\Services\Spider\ChapterSpider;
-use App\Services\Spider\QuranSpider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use RoachPHP\Roach;
-use RoachPHP\Spider\Configuration\Overrides;
 use Illuminate\Support\Str;
 
 class ExtractQuran extends Command

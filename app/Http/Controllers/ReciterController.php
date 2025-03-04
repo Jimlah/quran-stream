@@ -12,7 +12,9 @@ class ReciterController extends Controller
      */
     public function index()
     {
-        return inertia('Reciter/Index', []);
+        return inertia('Reciter/Index', [
+            'reciters' => fn() => Reciter::query()->orderBy('name', 'asc')->get(),
+        ]);
     }
 
     /**
