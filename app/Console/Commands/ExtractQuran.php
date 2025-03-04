@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Reciter;
 use App\Services\Spider\ChapterSpider;
 use App\Services\Spider\QuranSpider;
 use Illuminate\Console\Command;
@@ -49,6 +50,14 @@ class ExtractQuran extends Command
 
         $http->get('/qaris')
             ->collect()
+            ->each(function ($item) {
+                $reciter = Reciter::query()->updateOrCreate([
+                    'slug' => Str::slug($item['name']),
+                    'name' => $item['name'],
+                    'pathname' => $item['relative_path'],
+                ], []);
+            })
+            ->dd()
             ->filter(fn($item) => Str::contains($item['name'], 'Abdur-Rahman as-Sudais'))
             ->each(function ($item) use ($http) {
                 $this->info("Processing Reciter {$item['name']}");

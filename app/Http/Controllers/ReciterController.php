@@ -12,7 +12,7 @@ class ReciterController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('Reciter/Index', []);
     }
 
     /**
