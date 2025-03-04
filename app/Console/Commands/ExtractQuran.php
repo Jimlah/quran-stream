@@ -62,11 +62,11 @@ class ExtractQuran extends Command
                     ->each(function ($item) use ($quranHttp, $relativePath) {
                         $fileName = $item['file_name'];
                         $this->info("Downloading {$fileName}");
-                        $filepath = 'quran/' . $relativePath . $fileName;
+                        $filepath =  $relativePath . $fileName;
 
                         $url = "https://download.quranicaudio.com/quran/{$filepath}";
                         // dd(Storage::get($url), $url);
-                        Storage::disk('s3')->put($filepath, file_get_contents($url));
+                        Storage::disk('s3')->put('quran/' . $filepath, file_get_contents($url));
                         $this->info("Downloaded {$filepath}");
                     });
             });
