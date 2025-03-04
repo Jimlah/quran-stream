@@ -46,20 +46,17 @@ class ExtractQuran extends Command
 
         $http->get('/qaris')
             ->collect()
-            ->each(function ($item) {
+            ->each(function ($item) use ($http) {
                 $reciter = Reciter::query()->updateOrCreate([
                     'slug' => Str::slug($item['name']),
                     'name' => $item['name'],
                     'pathname' => $item['relative_path'],
                 ], []);
-            })
-            ->dd()
-            ->filter(fn($item) => Str::contains($item['name'], 'Abdur-Rahman as-Sudais'))
-            ->each(function ($item) use ($http) {
-                $this->info("Processing Reciter {$item['name']}");
+                $this->info("Processing Reciter {$reciter->name}");
                 $relativePath = $item['relative_path'];
                 $quranHttp = Http::baseUrl("https://download.quranicaudio.com/quran/{$relativePath}")
                     ->withHeader('accept', 'application/octet-stream');
+
                 $http->get("/qaris/{$item['id']}/audio_files/mp3")
                     ->collect()
                     ->each(function ($item) use ($quranHttp, $relativePath) {
@@ -67,11 +64,9 @@ class ExtractQuran extends Command
                         $this->info("Downloading {$fileName}");
                         $filepath = $relativePath . $fileName;
                         $response = $quranHttp->get($fileName);
-                        Storage::disk('local')->put($filepath, $response->body());
+                        Storage::disk('s3')->put($filepath, $response->body());
                         $this->info("Downloaded {$fileName}");
                     });
-
-                $this->info("Reciter {$item['name']} done");
             });
 
         $this->info('Command executed');

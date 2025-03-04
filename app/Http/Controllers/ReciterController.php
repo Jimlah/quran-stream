@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reciter;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ReciterController extends Controller
 {
@@ -12,7 +13,7 @@ class ReciterController extends Controller
      */
     public function index()
     {
-        return inertia('Reciter/Index', [
+        return Inertia::render('Reciter/Index', [
             'reciters' => fn() => Reciter::query()->orderBy('name', 'asc')->get(),
         ]);
     }
